@@ -13,7 +13,17 @@ leveling, and save mechanics.
 
 namespace Map{ 
 
-    void Print();
+    class Location{
+    public:
+        int ID;
+        string Name;
+        bool Shop;
+        bool Rest;
+
+        Location(int _ID,string _Name,bool _Shop,bool _Rest)
+            : ID(_ID),Name(_Name), Shop(_Shop), Rest(_Rest) {}
+    };
+
 
 
 } // Ending namespace Map
