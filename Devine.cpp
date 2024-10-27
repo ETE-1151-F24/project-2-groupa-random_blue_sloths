@@ -59,12 +59,14 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"NE","S",inventory)){return;}
                         PlayerLoc=Temple;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     case 2: // Hestia's Tower
                         if(!Adventure(5,5,"NW","SE",inventory)){return;}
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"NW","S",inventory)){return;}
                         PlayerLoc=Tower;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }
@@ -81,14 +83,17 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"SW","NE",inventory)){return;}
                         PlayerLoc=City;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     case 2: // Hestia's Tower
                         if(!Adventure(8,3,"W","E",inventory)){return;}
                         RandomWorldEvent(inventory);
                         switch(Adventure(8,8,"W","E","S",inventory)){
                             case 0: return;
-                            case 1: PlayerLoc=Tower; return;
-                            case 2: PlayerLoc=Farm; return;
+                            case 1: PlayerLoc=Tower;
+                                cout << "You have arrived at " << PlayerLoc.Name; return;
+                            case 2: PlayerLoc=Farm;
+                                cout << "You have arrived at " << PlayerLoc.Name; return;
                         }
                     break;
                     default: cout << "Invalid Choice\n"; return;
@@ -106,15 +111,18 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"SE","NW",inventory)){return;}
                         PlayerLoc=City;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     case 2: // Temple of Zeus
                         switch(Adventure(8,8,"E","W","S",inventory)){
                             case 0: return;
-                            case 2: PlayerLoc=Farm; return;
+                            case 2: PlayerLoc=Farm; 
+                                cout << "You have arrived at " << PlayerLoc.Name; return;
                         }
                         RandomWorldEvent(inventory);
                         if(!Adventure(8,3,"E","W",inventory)){return;}
                         PlayerLoc=Temple;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }
@@ -133,16 +141,19 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(8,3,"E","W",inventory)){return;}
                         PlayerLoc=Temple;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     case 2: // Hestia's Tower
                         if(!Adventure(8,8,"S","E",inventory)){return;}
                         PlayerLoc=Tower;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     case 3: // Hades' Castle
                         if(!Adventure(10,10,"E","S",inventory)){return;}
                         RandomWorldEvent(inventory);
                         if(!Adventure(6,16,"N","S",inventory)){return;}
                         PlayerLoc=Castle;
+                        cout << "You have arrived at " << PlayerLoc.Name;
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }         
@@ -157,6 +168,7 @@ namespace Map{
                 RandomWorldEvent(inventory);
                 if(!Adventure(10,10,"S","E",inventory)){return;}
                 PlayerLoc=Farm;
+                cout << "You have arrived at " << PlayerLoc.Name;
             break;
         }
     }
@@ -599,14 +611,14 @@ namespace Map{
     void ItemEvent(vector<string>& inventory){
         switch(rand()%10){
             case 1: case 2: 
-                cout << "It was a Health Potion";
+                cout << "It was a Health Potion\n";
                 inventory.push_back("Healing Potion");
             break;
             case 3:  
-                cout << "It was an Attack Potion";
+                cout << "It was an Attack Potion\n";
                 inventory.push_back("Attack Potion");
             case 4: 
-                cout << "It was a Fire Potion";
+                cout << "It was a Fire Potion\n";
                 inventory.push_back("Fire Scroll");
             break;      
             default: cout << "It was rubbish\n";  
@@ -650,7 +662,7 @@ namespace Save{
             do{
                 PrintSave();
                 cout << "(1-3) Choose a save file\n"
-                    << "4. Exit";
+                    << "4. Exit\n";
                 cin >> Filenum;
                 switch(Filenum){
                     case 1: case 2: case 3: break;
@@ -658,10 +670,12 @@ namespace Save{
                     default: cout << "Invalid Choice\n";
                 }
             }while(Filenum<1&&Filenum>4);
+            Format::PageBreak();
             PrintSave(Filenum);
+            Format::PageBreak();
             do{
                 cout << "What would you like to do?\n"
-                    << "1. Save Game\nn2. Load Game\n3. Delete Save\n4. Back\n";
+                    << "1. Save Game\n2. Load Game\n3. Delete Save\n4. Back\n";
                 cin >> opnum;
                 switch(opnum){
                     case 1:
@@ -687,8 +701,10 @@ namespace Save{
     }
 
     void PrintSave(){
-        for (int i=0; i<3; i++){
+        Format::PageBreak();
+        for (int i=1; i<=3; i++){
             PrintSave(i);
+            Format::PageBreak();
         }
     }
 
@@ -696,20 +712,20 @@ namespace Save{
         string temp;
         int tempnum;
         ifstream SaveFile;
-        Format::PageBreak();
         switch(Filenum) {
             case 1: SaveFile.open("Saves/Save1.txt"); break;
             case 2: SaveFile.open("Saves/Save2.txt"); break;
             case 3: SaveFile.open("Saves/Save3.txt"); break;
         }
-        if (!SaveFile) {cout << "Save file " << Filenum << " not found.\n"; return;}
+        if (!SaveFile) {cout << "Save " << Filenum << ": Empty.\n"; return;}
         getline(SaveFile, temp); // Timestamp
-        cout << "Save " << Filenum << "          -          Last saved on: " << temp << "\n";
+        cout << "Save " << Filenum << "     -     Saved on: " << temp << "\n";
         getline(SaveFile, temp); // playerName
-        cout << "Name: " << temp << "     -     Level: ";
-        SaveFile.ignore(); // playerPower
+        cout << "Name: " << temp << "  -  Level: ";
+        getline(SaveFile, temp); // playerPower
         getline(SaveFile, temp); // PlayerLevel
-        cout << temp << "     -     Location: ";
+        cout << temp << "  -  Location: ";
+        getline(SaveFile, temp); // PlayerExp
         SaveFile >> tempnum;
         switch(tempnum){
             case 1: cout << Map::City.Name; break;
@@ -719,7 +735,6 @@ namespace Save{
             case 5: cout << Map::Castle.Name; break;
         }
         cout << "\n";
-        Format::PageBreak();
         SaveFile.close();
     }
     
@@ -738,7 +753,6 @@ namespace Save{
         }
         if (!SaveFile) {cout << "Error opening file for saving.\n"; return 1;}
         time_t now = std::time(nullptr);
-        char timestamp[20];
         strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", localtime(&now));
         SaveFile << timestamp << "\n"
                  << playerName << "\n" 
@@ -755,8 +769,13 @@ namespace Save{
         return 0;
     }
 
+    //
+    //
+    // Timestamp, playerName, playerPower, PlayerLevel,
+    // PlayerExp, PlayerLoc.ID, inventory.size, inventory
     bool LoadGame(int Filenum, string& playerName, string& playerPower, int& PlayerLevel, 
-                  int PlayerExp=0, vector<string>& inventory){
+                  int PlayerExp, vector<string>& inventory){
+        string temp;
         int size;
         string Item;
         ifstream SaveFile;
@@ -766,14 +785,14 @@ namespace Save{
             case 3:SaveFile.open("Saves/Save3.txt"); break;
         }
         if (!SaveFile) {cout << "Error opening file\n"; return 1;}
+        getline(SaveFile, temp); // Timestamp
+        getline(SaveFile, playerName); // playerName
+        getline(SaveFile, playerPower); // playerPower
+        SaveFile >> Level::PlayerLevel; // PlayerLevel
         SaveFile.ignore();
-        getline(SaveFile, playerName);
-        getline(SaveFile, playerPower);
-        SaveFile >> Level::PlayerLevel;
+        SaveFile >> Level::PlayerExp; // PlayerExp
         SaveFile.ignore();
-        SaveFile >> Level::PlayerExp;
-        SaveFile.ignore();
-        SaveFile >> Map::PlayerLoc.ID;
+        SaveFile >> Map::PlayerLoc.ID; // PlayerLoc.ID
         SaveFile.ignore();
         switch(Map::PlayerLoc.ID){
             case 1: Map::PlayerLoc=Map::City; break;
@@ -782,11 +801,11 @@ namespace Save{
             case 4: Map::PlayerLoc=Map::Farm; break;
             case 5: Map::PlayerLoc=Map::Castle; break;
         }
-        SaveFile >> size;
+        SaveFile >> size; // inventory.size
         SaveFile.ignore();
         inventory.clear();
         for (int i = 0; i < size; i++) {
-            getline(SaveFile, Item);
+            getline(SaveFile, Item);        // inventory
             inventory.push_back(Item);
         }
         SaveFile.close();
@@ -821,7 +840,7 @@ namespace Save{
 namespace Format{
 
     void PageBreak(){
-        cout << "--------------------------------------------------------\n"; 
+        cout << "-------------------------------------------------------------\n"; 
     }
 
     void Pause(){
@@ -830,5 +849,4 @@ namespace Format{
     }
 
 } // Ending namespace Format
-
 

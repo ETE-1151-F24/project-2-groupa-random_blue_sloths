@@ -3,6 +3,9 @@ This file is used for declaring the map,
 leveling, and save mechanics. 
 */
 
+#include<string>
+#include<vector>
+
 // these is needed for header files 
 #ifndef Devine_h 
 #define Devine_h
@@ -24,8 +27,8 @@ namespace Map{
 
     void WorldMap();
     void WorldMapTravel(std::vector<std::string>& inventory);
-    bool Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest, vector<string>& inventory);
-    int  Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest,const std::string Extra, vector<string>& inventory);
+    bool Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest, std::vector<std::string>& inventory);
+    int  Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest,const std::string Extra, std::vector<std::string>& inventory);
     void RandomWorldEvent(std::vector<std::string>& inventory);
     void RandomMapEvent(std::vector<std::string>& inventory);
     void MonsterEvent();
@@ -47,13 +50,13 @@ namespace Level{
 
 namespace Save{
 
-    void SaveMenu(std::string& playerName, std::string& playerPower, std::vector<string>& inventory);
+    void SaveMenu(std::string& playerName, std::string& playerPower, std::vector<std::string>& inventory);
     void PrintSave();
     void PrintSave(const int Filenum);
     bool SaveGame(const int Filenum, const std::string& playerName, const std::string& playerPower,
                  const int& PlayerLevel, const int PlayerExp, const std::vector<std::string>& inventory);
     bool LoadGame(int Filenum, std::string& playerName, std::string& playerPower,
-                 int& PlayerLevel, int PlayerExp=0, std::vector<std::string>& inventory);
+                 int& PlayerLevel, int PlayerExp, std::vector<std::string>& inventory);
     bool DeleteSave(const int Filenum);
     
 } // Ending namespace Save
