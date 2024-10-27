@@ -7,9 +7,6 @@ leveling, and save mechanics.
 #ifndef Devine_h 
 #define Devine_h
 
-#include<iostream>
-
-
 
 namespace Map{ 
 
@@ -26,14 +23,13 @@ namespace Map{
 
 
     void WorldMap();
-    void WorldMapTravel();
-    bool Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest);
-    int Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest,const std::string Extra);
-    void RandomWorldEvent();
-    void RandomMapEvent();
-    void PageBreak();
-    void Pause();
-
+    void WorldMapTravel(std::vector<std::string>& inventory);
+    bool Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest, vector<string>& inventory);
+    int  Adventure(const int Width, const int Height, const std::string Spawn, const std::string Dest,const std::string Extra, vector<string>& inventory);
+    void RandomWorldEvent(std::vector<std::string>& inventory);
+    void RandomMapEvent(std::vector<std::string>& inventory);
+    void MonsterEvent();
+    void ItemEvent(std::vector<std::string>& inventory);
 
 
 } // Ending namespace Map
@@ -42,8 +38,8 @@ namespace Map{
 
 namespace Level{ 
 
-    void Increase();
-
+    void GainExp(const int amount);
+    void LevelUp();
 
 } // Ending namespace Level
 
@@ -51,14 +47,24 @@ namespace Level{
 
 namespace Save{
 
-    void SaveGame();
-    void LoadGame();
+    void SaveMenu(std::string& playerName, std::string& playerPower, std::vector<string>& inventory);
+    void PrintSave();
+    void PrintSave(const int Filenum);
+    bool SaveGame(const int Filenum, const std::string& playerName, const std::string& playerPower,
+                 const int& PlayerLevel, const int PlayerExp, const std::vector<std::string>& inventory);
+    bool LoadGame(int Filenum, std::string& playerName, std::string& playerPower,
+                 int& PlayerLevel, int PlayerExp=0, std::vector<std::string>& inventory);
+    bool DeleteSave(const int Filenum);
     
-
 } // Ending namespace Save
 
 
+namespace Format{
 
+    void PageBreak();
+    void Pause();
+
+} // Ending namespace Format
 
 
 #endif // This is needed for header files 
