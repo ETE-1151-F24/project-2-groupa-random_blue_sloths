@@ -59,14 +59,14 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"NE","S",inventory)){return;}
                         PlayerLoc=Temple;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     case 2: // Hestia's Tower
                         if(!Adventure(5,5,"NW","SE",inventory)){return;}
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"NW","S",inventory)){return;}
                         PlayerLoc=Tower;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }
@@ -83,7 +83,7 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"SW","NE",inventory)){return;}
                         PlayerLoc=City;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     case 2: // Hestia's Tower
                         if(!Adventure(8,3,"W","E",inventory)){return;}
@@ -91,9 +91,9 @@ namespace Map{
                         switch(Adventure(8,8,"W","E","S",inventory)){
                             case 0: return;
                             case 1: PlayerLoc=Tower;
-                                cout << "You have arrived at " << PlayerLoc.Name; return;
+                                cout << "You have arrived at " << PlayerLoc.Name << "\n"; return;
                             case 2: PlayerLoc=Farm;
-                                cout << "You have arrived at " << PlayerLoc.Name; return;
+                                cout << "You have arrived at " << PlayerLoc.Name << "\n"; return;
                         }
                     break;
                     default: cout << "Invalid Choice\n"; return;
@@ -111,18 +111,18 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(5,5,"SE","NW",inventory)){return;}
                         PlayerLoc=City;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     case 2: // Temple of Zeus
                         switch(Adventure(8,8,"E","W","S",inventory)){
                             case 0: return;
                             case 2: PlayerLoc=Farm; 
-                                cout << "You have arrived at " << PlayerLoc.Name; return;
+                                cout << "You have arrived at " << PlayerLoc.Name << "\n"; return;
                         }
                         RandomWorldEvent(inventory);
                         if(!Adventure(8,3,"E","W",inventory)){return;}
                         PlayerLoc=Temple;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }
@@ -141,19 +141,19 @@ namespace Map{
                         RandomWorldEvent(inventory);
                         if(!Adventure(8,3,"E","W",inventory)){return;}
                         PlayerLoc=Temple;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     case 2: // Hestia's Tower
                         if(!Adventure(8,8,"S","E",inventory)){return;}
                         PlayerLoc=Tower;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     case 3: // Hades' Castle
                         if(!Adventure(10,10,"E","S",inventory)){return;}
                         RandomWorldEvent(inventory);
                         if(!Adventure(6,16,"N","S",inventory)){return;}
                         PlayerLoc=Castle;
-                        cout << "You have arrived at " << PlayerLoc.Name;
+                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }         
@@ -168,7 +168,7 @@ namespace Map{
                 RandomWorldEvent(inventory);
                 if(!Adventure(10,10,"S","E",inventory)){return;}
                 PlayerLoc=Farm;
-                cout << "You have arrived at " << PlayerLoc.Name;
+                cout << "You have arrived at " << PlayerLoc.Name << "\n";
             break;
         }
     }
@@ -329,7 +329,7 @@ namespace Map{
                 case 9: 
                     cout << "You open a chest to find\n"
                          << "...\n";
-                    if (rand()%10<9){
+                    if ((rand()%10)<9){
                         cout << "It was a Mimic!\n"
                              << "You loose health\n";
                     }else{ItemEvent(inventory);}
@@ -533,7 +533,7 @@ namespace Map{
                 case 9: 
                     cout << "You open a chest to find\n"
                          << "...\n";
-                    if (rand()%10<9){
+                    if ((rand()%10)<9){
                         cout << "It was a Mimic!\n"
                              << "You loose health\n";
                     }else{ItemEvent(inventory);}
@@ -618,7 +618,7 @@ namespace Map{
                 cout << "It was an Attack Potion\n";
                 inventory.push_back("Attack Potion");
             case 4: 
-                cout << "It was a Fire Potion\n";
+                cout << "It was a Fire Scroll\n";
                 inventory.push_back("Fire Scroll");
             break;      
             default: cout << "It was rubbish\n";  
