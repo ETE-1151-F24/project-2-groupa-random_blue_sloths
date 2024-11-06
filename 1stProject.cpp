@@ -1,8 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "Devine.hpp"
 
 using namespace std;
+
+
+class Player{
+    public:
+        string Name;
+
+
+};
 
 // Function to display inventory
 void displayInventory(const vector<string>& inventory) {
@@ -36,14 +45,15 @@ string choosePower(int choice) {
 int main() {
     cout << "Welcome" << endl;
     
-    string playerName;
+    Player player;
+
     cout << "What is your name: ";
-    cin >> playerName;
-    cout << "Welcome " << playerName << "!" << endl;
+    cin >> player.Name;
+    cout << "Welcome " << player.Name << "!" << endl;
 
     // Choosing player power
     int choice;
-    cout << "What powers will " << playerName << " possess?" << endl;
+    cout << "What powers will " << player.Name << " possess?" << endl;
     cout << "1. Healing" << endl;
     cout << "2. Telekinesis" << endl;
     cout << "3. Invisibility" << endl;
@@ -58,7 +68,7 @@ int main() {
 
     // Get the chosen power
     string playerPower = choosePower(choice);
-    cout << playerName << " has chosen the power of " << playerPower << "!\n";
+    cout << player.Name << " has chosen the power of " << playerPower << "!\n";
 
  // Add items to inventory
     vector<string> inventory;
@@ -78,6 +88,11 @@ int main() {
     } else {
         cout << "You chose not to view the inventory.\n";
     }
+
+
+    Map::WorldMap();
+    Map::WorldMapTravel(inventory);
+
 
     return 0;
 }
