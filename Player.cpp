@@ -1,8 +1,7 @@
 #include <iostream>
-#include "Player.h"
+#include "Player.hpp"
 using namespace std;
 
-Player::Player(const std::string& name) : Name(name), Type(0), Magic(0) {}
 
 void Player::choosePlayerType() {
     cout << "Choose your player type:" << endl;

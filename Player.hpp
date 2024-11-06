@@ -2,16 +2,21 @@
 #define PLAYER_H
 
 #include <string>
+#include "Devine.hpp"
 
 class Player {
 public:
-    Player(const std::string& name);
+
+    std::string Name;
+    int Level;
+    int Exp;
+    int Type; 
+    int Magic;
+    Map::Location Loc;
+
     void choosePlayerType();
     void displayPlayerStats();
 
-    std::string Name;
-    int Type; 
-    int Magic;
 };
 
 #endif // PLAYER_H
