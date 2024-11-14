@@ -37,6 +37,7 @@ namespace Save{
                     << "1. Save Game\n2. Load Game\n3. Delete Save\n4. Back\n";
                 cin >> opnum;
                 switch(opnum){
+                    case 1:
                     if(SaveGame(Filenum,P)==1){opnum=4;}
                     else{return;}
                     break;
