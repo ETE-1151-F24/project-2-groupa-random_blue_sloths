@@ -104,7 +104,8 @@ namespace Save{
     // Timestamp, P.Name, P.Level, P.Exp, P.Type
     // P.Magic, P.Loc.ID, inventory.size, inventory
     bool SaveGame(const int Filenum, const Player& P){  
-        string temp;                  
+        string temp;
+        int tempN                  
         char timestamp[20];             
         ofstream SaveFile;
         switch(Filenum){
@@ -128,8 +129,8 @@ namespace Save{
             SaveFile << temp << "\n";
             temp = inventoryDescriptions[i];
             SaveFile << temp << "\n";
-            temp = inventoryTraits[i];
-            SaveFile << temp << "\n";
+            tempN = inventoryTraits[i];
+            SaveFile << tempN << "\n";
         }
 
         SaveFile.close();
