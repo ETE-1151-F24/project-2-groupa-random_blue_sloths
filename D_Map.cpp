@@ -1,52 +1,71 @@
 /*
-This file has functions for the map, 
-leveling, and save mechanics. 
+This file has functions for the map
 */
 
 #include <iostream>
 #include <fstream>
-#include <cstdlib> 
-#include <ctime>
-#include <string>
 #include <vector>
-#include"Devine.hpp"
+#include <string>
+#include "D_Map.hpp"
+#include "D_Misc.hpp"
+#include "Player.hpp"
+#include "Inventory.hpp"
 using namespace std;
 
-namespace Map{ 
 
+namespace Map{ 
+    
     Location City(1,"The City of Kronos",true,true);
     Location Temple(2,"Temple of Zeus",false,true);
     Location Tower(3,"Hestia's Tower",false,false);
     Location Farm(4,"Pagasus Farm",false,true);
     Location Castle(5,"Hades' Castle",false,false);
 
-    Location PlayerLoc = City;
 
 
-    void WorldMap(){
+    void setLoc(Player& P){
+        switch(P.Loc.ID){
+            case 1: P.Loc=City; break;
+            case 2: P.Loc=Temple; break;
+            case 3: P.Loc=Tower; break;
+            case 4: P.Loc=Farm; break;
+            case 5: P.Loc=Castle; break;
+        }
+    }
+
+    void setLoc(Player& P, int Location){
+        switch(Location){
+            case 1: P.Loc=City; break;
+            case 2: P.Loc=Temple; break;
+            case 3: P.Loc=Tower; break;
+            case 4: P.Loc=Farm; break;
+            case 5: P.Loc=Castle; break;
+        }
+    }
+
+    void WorldMap(const Player& P){
         ifstream Map;
         string MapFeed;
-        if (PlayerLoc.ID==City.ID || PlayerLoc.ID==Temple.ID || PlayerLoc.ID==Tower.ID){        
+        if (P.Loc.ID==City.ID || P.Loc.ID==Temple.ID || P.Loc.ID==Tower.ID){        
             Map.open("Maps/Map1.txt");
             while (getline(Map, MapFeed)) {
                 cout << MapFeed << "\n";
             }
-        }else if(PlayerLoc.ID==Farm.ID || PlayerLoc.ID==Castle.ID){
+        }else if(P.Loc.ID==Farm.ID || P.Loc.ID==Castle.ID){
             Map.open("Maps/Map2.txt");
             while (getline(Map, MapFeed)) {
                 cout << MapFeed << "\n";
             }
         }
         Map.close();
-        cout << "You are currently at " << PlayerLoc.Name << "\n";
+        cout << "You are currently at " << P.Loc.Name << "\n";
     }
 
-
-    void WorldMapTravel(vector<string>& inventory){
+    void WorldMapTravel(Player& P){
         int Destination;
         char yn;
-        WorldMap();
-        switch(PlayerLoc.ID){
+        WorldMap(P);
+        switch(P.Loc.ID){
             case 1: // City of Kronos
                 cout << "Where would you like to go?\n"
                     << "1. " << Temple.Name << "\n"
@@ -55,18 +74,18 @@ namespace Map{
                 Format::PageBreak();
                 switch(Destination){
                     case 1: // Temple of Zeus
-                        if(!Adventure(5,5,"NE","SW",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(5,5,"NE","S",inventory)){return;}
-                        PlayerLoc=Temple;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,5,5,"NE","SW")){return;}
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,5,5,"NE","S")){return;}
+                        P.Loc=Temple;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     case 2: // Hestia's Tower
-                        if(!Adventure(5,5,"NW","SE",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(5,5,"NW","S",inventory)){return;}
-                        PlayerLoc=Tower;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,5,5,"NW","SE")){return;}
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,5,5,"NW","S")){return;}
+                        P.Loc=Tower;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }
@@ -79,21 +98,21 @@ namespace Map{
                 Format::PageBreak();
                 switch(Destination){
                     case 1: // City of Kronos
-                        if(!Adventure(5,5,"S","NE",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(5,5,"SW","NE",inventory)){return;}
-                        PlayerLoc=City;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,5,5,"S","NE")){return;}
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,5,5,"SW","NE")){return;}
+                        P.Loc=City;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     case 2: // Hestia's Tower
-                        if(!Adventure(8,3,"W","E",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        switch(Adventure(8,8,"W","E","S",inventory)){
+                        if(!Adventure(P,8,3,"W","E")){return;}
+                        RandomWorldEvent(P);
+                        switch(Adventure(P,8,8,"W","E","S")){
                             case 0: return;
-                            case 1: PlayerLoc=Tower;
-                                cout << "You have arrived at " << PlayerLoc.Name << "\n"; return;
-                            case 2: PlayerLoc=Farm;
-                                cout << "You have arrived at " << PlayerLoc.Name << "\n"; return;
+                            case 1: P.Loc=Tower;
+                                cout << "You have arrived at " << P.Loc.Name << "\n"; return;
+                            case 2: P.Loc=Farm;
+                                cout << "You have arrived at " << P.Loc.Name << "\n"; return;
                         }
                     break;
                     default: cout << "Invalid Choice\n"; return;
@@ -107,22 +126,22 @@ namespace Map{
                 Format::PageBreak();
                 switch(Destination){
                     case 1: // City of Kronos
-                        if(!Adventure(5,5,"S","NW",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(5,5,"SE","NW",inventory)){return;}
-                        PlayerLoc=City;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,5,5,"S","NW")){return;}
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,5,5,"SE","NW")){return;}
+                        P.Loc=City;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     case 2: // Temple of Zeus
-                        switch(Adventure(8,8,"E","W","S",inventory)){
+                        switch(Adventure(P,8,8,"E","W","S")){
                             case 0: return;
-                            case 2: PlayerLoc=Farm; 
-                                cout << "You have arrived at " << PlayerLoc.Name << "\n"; return;
+                            case 2: P.Loc=Farm; 
+                                cout << "You have arrived at " << P.Loc.Name << "\n"; return;
                         }
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(8,3,"E","W",inventory)){return;}
-                        PlayerLoc=Temple;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,8,3,"E","W")){return;}
+                        P.Loc=Temple;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }
@@ -137,23 +156,23 @@ namespace Map{
                 Format::PageBreak();
                 switch(Destination){
                     case 1: // Temple of Zeus
-                        if(!Adventure(8,8,"S","W",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(8,3,"E","W",inventory)){return;}
-                        PlayerLoc=Temple;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,8,8,"S","W")){return;}
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,8,3,"E","W")){return;}
+                        P.Loc=Temple;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     case 2: // Hestia's Tower
-                        if(!Adventure(8,8,"S","E",inventory)){return;}
-                        PlayerLoc=Tower;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,8,8,"S","E")){return;}
+                        P.Loc=Tower;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     case 3: // Hades' Castle
-                        if(!Adventure(10,10,"E","S",inventory)){return;}
-                        RandomWorldEvent(inventory);
-                        if(!Adventure(6,16,"N","S",inventory)){return;}
-                        PlayerLoc=Castle;
-                        cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                        if(!Adventure(P,10,10,"E","S")){return;}
+                        RandomWorldEvent(P);
+                        if(!Adventure(P,6,16,"N","S")){return;}
+                        P.Loc=Castle;
+                        cout << "You have arrived at " << P.Loc.Name << "\n";
                     break;
                     default: cout << "Invalid Choice\n"; return;
                 }         
@@ -164,17 +183,17 @@ namespace Map{
                 if(yn != 'y'||yn != 'Y'){return;}
                 Format::PageBreak();
                 //Pagasus Farm
-                if(!Adventure(5,15,"S","N",inventory)){return;}
-                RandomWorldEvent(inventory);
-                if(!Adventure(10,10,"S","E",inventory)){return;}
-                PlayerLoc=Farm;
-                cout << "You have arrived at " << PlayerLoc.Name << "\n";
+                if(!Adventure(P,5,15,"S","N")){return;}
+                RandomWorldEvent(P);
+                if(!Adventure(P,10,10,"S","E")){return;}
+                P.Loc=Farm;
+                cout << "You have arrived at " << P.Loc.Name << "\n";
             break;
         }
     }
 
 
-    bool Adventure(const int Width, const int Height, const string Spawn, const string Dest, vector<string>& inventory){
+    bool Adventure(Player& P, const int Width, const int Height, const string Spawn, const string Dest){
         srand(time(0));
         vector<vector<int>> Map(Height, vector<int>(Width));
         vector<vector<bool>> Fog(Height, vector<bool>(Width, true));
@@ -277,12 +296,12 @@ namespace Map{
                 FogClear(Height,Width,PlayerSpace,Fog);
                 PrintMap(Height,Width,Map,Fog,PlayerSpace);
                 cout << "Where would you like to move\n"
-                    << "          1. Up\n"
-                    << "2. Left                  3. Right\n"
-                    << "          4. Down                       ";
+                    << "          8. Up\n"
+                    << "4. Left                  6. Right\n"
+                    << "          2. Down                       : ";
                 cin >> input;
                 switch(input){
-                    case 1: // UP
+                    case 8: // UP
                         if (PlayerSpace[0]==0){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -290,7 +309,7 @@ namespace Map{
                         }
                         else {PlayerSpace[0]--; moved=true;}
                         break;
-                    case 2: // Left
+                    case 4: // Left
                         if (PlayerSpace[1]==0){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -298,7 +317,7 @@ namespace Map{
                         }
                         else {PlayerSpace[1]--; moved=true;}
                         break;
-                    case 3: // Right
+                    case 6: // Right
                         if (PlayerSpace[1]==Width-1){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -306,7 +325,7 @@ namespace Map{
                         }
                         else {PlayerSpace[1]++; moved=true;}
                         break;
-                    case 4: // Down
+                    case 2: // Down
                         if (PlayerSpace[0]==Height-1){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -320,11 +339,11 @@ namespace Map{
             Format::PageBreak();
             switch(Map[PlayerSpace[0]][PlayerSpace[1]]){       
                 case 4: case 5: case 6: case 7:
-                    MonsterEvent();
+                    MonsterEvent(P);
                     Format::Pause(); Format::PageBreak();
                     break;
                 case 8:  
-                    RandomMapEvent(inventory); 
+                    RandomMapEvent(P); 
                     break;
                 case 9: 
                     cout << "You open a chest to find\n"
@@ -332,7 +351,7 @@ namespace Map{
                     if ((rand()%10)<9){
                         cout << "It was a Mimic!\n"
                              << "You loose health\n";
-                    }else{ItemEvent(inventory);}
+                    }else{ItemEvent();}
                     Format::Pause(); Format::PageBreak();
                     break;
                 case 10:
@@ -351,7 +370,7 @@ namespace Map{
                 Map[PlayerSpace[0]][PlayerSpace[1]]=0;
             }
         }while(moved);
-    return 0;
+        return false;
     }
 
 
@@ -362,7 +381,7 @@ namespace Map{
 
 
 
-    int Adventure(const int Width, const int Height, const string Spawn, const string Dest,const string Extra,vector<string>& inventory){
+    int Adventure(Player& P, const int Width, const int Height, const string Spawn, const string Dest,const string Extra){
         srand(time(0));
         vector<vector<int>> Map(Height, vector<int>(Width));
         vector<vector<bool>> Fog(Height, vector<bool>(Width, true));
@@ -481,12 +500,12 @@ namespace Map{
                 FogClear(Height,Width,PlayerSpace,Fog);
                 PrintMap(Height,Width,Map,Fog,PlayerSpace);
                 cout << "Where would you like to move\n"
-                    << "          1. Up\n"
-                    << "2. Left                  3. Right\n"
-                    << "          4. Down                       ";
+                    << "          8. Up\n"
+                    << "4. Left                  6. Right\n"
+                    << "          2. Down                       : ";
                 cin >> input;
                 switch(input){
-                    case 1: // UP
+                    case 8: // UP
                         if (PlayerSpace[0]==0){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -494,7 +513,7 @@ namespace Map{
                         }
                         else {PlayerSpace[0]--; moved=true;}
                         break;
-                    case 2: // Left
+                    case 4: // Left
                         if (PlayerSpace[1]==0){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -502,7 +521,7 @@ namespace Map{
                         }
                         else {PlayerSpace[1]--; moved=true;}
                         break;
-                    case 3: // Right
+                    case 6: // Right
                         if (PlayerSpace[1]==Width-1){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -510,7 +529,7 @@ namespace Map{
                         }
                         else {PlayerSpace[1]++; moved=true;}
                         break;
-                    case 4: // Down
+                    case 2: // Down
                         if (PlayerSpace[0]==Height-1){
                             cout<<"You can not move that way\n";
                             Format::PageBreak();
@@ -524,11 +543,11 @@ namespace Map{
             Format::PageBreak();
             switch(Map[PlayerSpace[0]][PlayerSpace[1]]){       
                 case 4: case 5: case 6: case 7:
-                    MonsterEvent();
+                    MonsterEvent(P);
                     Format::Pause(); Format::PageBreak();
                     break;
                 case 8:  
-                    RandomMapEvent(inventory); 
+                    RandomMapEvent(P); 
                     break;
                 case 9: 
                     cout << "You open a chest to find\n"
@@ -536,7 +555,7 @@ namespace Map{
                     if ((rand()%10)<9){
                         cout << "It was a Mimic!\n"
                              << "You loose health\n";
-                    }else{ItemEvent(inventory);}
+                    }else{ItemEvent();}
                     Format::Pause(); Format::PageBreak();
                     break;
                 case 10:
@@ -561,36 +580,36 @@ namespace Map{
                 Map[PlayerSpace[0]][PlayerSpace[1]]=0;
             }
         }while(moved);
-    return 0;
+        return 0;
     }
 
 
-    void RandomWorldEvent(vector<string>& inventory){
+    void RandomWorldEvent(Player& P){
         switch(rand()%10){
             case 1:
                 cout << "Something happened\n"
                      << "It was unremarkable\n";
             break;
             case 9:
-                MonsterEvent();
+                MonsterEvent(P);
             break;
             default: 
                 cout << "You found something on the road\n";
-                ItemEvent(inventory);
+                ItemEvent();
         }
         cout << "You travel\n";
         Format::Pause(); Format::PageBreak();
     }
 
 
-    void RandomMapEvent(vector<string>& inventory){
+    void RandomMapEvent(Player& P){
         switch(rand()%10){
             case 1:
                 cout << "You found something in the dirt\n";
-                ItemEvent(inventory);
+                ItemEvent();
             break;
             case 9:
-                MonsterEvent();
+                MonsterEvent(P);
             break;
             default: cout << "Something happened\n"
                           << "It was unremarkable\n";
@@ -599,27 +618,27 @@ namespace Map{
     }
 
 
-    void MonsterEvent(){
+    void MonsterEvent(Player& P){
         cout << "A monster appears\n"
             << "Comencing combat\n"
             << "...\n"
             << "You Win!\n";
-        Level::GainExp(10);
+        Level::GainExp(P,10);
     }
 
 
-    void ItemEvent(vector<string>& inventory){
+    void ItemEvent(){
         switch(rand()%10){
             case 1: case 2: 
                 cout << "It was a Health Potion\n";
-                inventory.push_back("Healing Potion");
+                addItem("Health Potion","A mysterious liquid of life",50);
             break;
             case 3:  
                 cout << "It was an Attack Potion\n";
-                inventory.push_back("Attack Potion");
+                addItem("Attack Potion","A potion that makes you hit real hard",5);
             case 4: 
                 cout << "It was a Fire Scroll\n";
-                inventory.push_back("Fire Scroll");
+                addItem("Fire Scroll","A scroll used to cast a basic fire spell",25);
             break;      
             default: cout << "It was rubbish\n";  
         }
@@ -627,226 +646,4 @@ namespace Map{
 
 
 } // Ending namespace Map
-
-
-namespace Level{ 
-
-    int PlayerLevel=1;
-    int PlayerExp=0;
-
-    void GainExp(const int amount){
-        const int ExpCap = PlayerLevel*50+50;
-        PlayerExp+=amount;
-        cout << "You have gained " << amount << " Experience\n";
-        if(PlayerExp>=ExpCap){
-            PlayerExp=PlayerExp%ExpCap;
-            LevelUp();
-        }
-    }
-
-    void LevelUp(){
-        PlayerLevel+=1;
-        cout << "LEVEL UP\n"
-             << "You are now Level " << PlayerLevel << "\n";
-    }   
-
-} // Ending namespace Level
-
-
-namespace Save{ 
-
-    void SaveMenu(string& playerName, string& playerPower, vector<string>& inventory){
-        int Filenum;
-        int opnum;
-        do{
-            do{
-                PrintSave();
-                cout << "(1-3) Choose a save file\n"
-                    << "4. Exit\n";
-                cin >> Filenum;
-                switch(Filenum){
-                    case 1: case 2: case 3: break;
-                    case 4: return;
-                    default: cout << "Invalid Choice\n";
-                }
-            }while(Filenum<1&&Filenum>4);
-            Format::PageBreak();
-            PrintSave(Filenum);
-            Format::PageBreak();
-            do{
-                cout << "What would you like to do?\n"
-                    << "1. Save Game\n2. Load Game\n3. Delete Save\n4. Back\n";
-                cin >> opnum;
-                switch(opnum){
-                    case 1:
-                        switch(SaveGame(Filenum,playerName,playerPower,Level::PlayerLevel,Level::PlayerExp,inventory)){
-                            case 0: return;
-                            case 1: opnum=4;
-                        }
-                    break;
-                    case 2:
-                        switch(LoadGame(Filenum,playerName,playerPower,Level::PlayerLevel,Level::PlayerExp,inventory)){
-                            case 0: return;
-                            case 1: opnum=4;
-                        }
-                    break;
-                    case 3:
-                        DeleteSave(Filenum);
-                    break;
-                    case 4: break;
-                    default: cout << "Invalid Choice\n";
-                }
-            }while(opnum<1&&opnum>4);            
-        }while(opnum==3||opnum==4);
-    }
-
-    void PrintSave(){
-        Format::PageBreak();
-        for (int i=1; i<=3; i++){
-            PrintSave(i);
-            Format::PageBreak();
-        }
-    }
-
-    void PrintSave(const int Filenum){
-        string temp;
-        int tempnum;
-        ifstream SaveFile;
-        switch(Filenum) {
-            case 1: SaveFile.open("Saves/Save1.txt"); break;
-            case 2: SaveFile.open("Saves/Save2.txt"); break;
-            case 3: SaveFile.open("Saves/Save3.txt"); break;
-        }
-        if (!SaveFile) {cout << "Save " << Filenum << ": Empty.\n"; return;}
-        getline(SaveFile, temp); // Timestamp
-        cout << "Save " << Filenum << "     -     Saved on: " << temp << "\n";
-        getline(SaveFile, temp); // playerName
-        cout << "Name: " << temp << "  -  Level: ";
-        getline(SaveFile, temp); // playerPower
-        getline(SaveFile, temp); // PlayerLevel
-        cout << temp << "  -  Location: ";
-        getline(SaveFile, temp); // PlayerExp
-        SaveFile >> tempnum;
-        switch(tempnum){
-            case 1: cout << Map::City.Name; break;
-            case 2: cout << Map::Temple.Name; break;
-            case 3: cout << Map::Tower.Name; break;
-            case 4: cout << Map::Farm.Name; break;
-            case 5: cout << Map::Castle.Name; break;
-        }
-        cout << "\n";
-        SaveFile.close();
-    }
-    
-    //
-    //
-    // Timestamp, playerName, playerPower, PlayerLevel,
-    // PlayerExp, PlayerLoc.ID, inventory.size, inventory
-    bool SaveGame(const int Filenum, const string& playerName, const string& playerPower,
-                 const int& PlayerLevel,const int PlayerExp, const vector<string>& inventory){                    
-        char timestamp[20];             
-        ofstream SaveFile;
-        switch(Filenum){
-            case 1:SaveFile.open("Saves/Save1.txt"); break;
-            case 2:SaveFile.open("Saves/Save2.txt"); break;
-            case 3:SaveFile.open("Saves/Save3.txt"); break;
-        }
-        if (!SaveFile) {cout << "Error opening file for saving.\n"; return 1;}
-        time_t now = std::time(nullptr);
-        strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", localtime(&now));
-        SaveFile << timestamp << "\n"
-                 << playerName << "\n" 
-                 << playerPower << "\n"
-                 << Level::PlayerLevel << "\n"
-                 << Level::PlayerExp << "\n"
-                 << Map::PlayerLoc.ID << "\n"
-                 << inventory.size() << "\n";
-        for (const string& item : inventory) {
-            SaveFile << item << "\n";
-        }
-        SaveFile.close();
-        cout << "Game saved successfully.\n";
-        return 0;
-    }
-
-    //
-    //
-    // Timestamp, playerName, playerPower, PlayerLevel,
-    // PlayerExp, PlayerLoc.ID, inventory.size, inventory
-    bool LoadGame(int Filenum, string& playerName, string& playerPower, int& PlayerLevel, 
-                  int PlayerExp, vector<string>& inventory){
-        string temp;
-        int size;
-        string Item;
-        ifstream SaveFile;
-        switch(Filenum){
-            case 1:SaveFile.open("Saves/Save1.txt"); break;
-            case 2:SaveFile.open("Saves/Save2.txt"); break;
-            case 3:SaveFile.open("Saves/Save3.txt"); break;
-        }
-        if (!SaveFile) {cout << "Error opening file\n"; return 1;}
-        getline(SaveFile, temp); // Timestamp
-        getline(SaveFile, playerName); // playerName
-        getline(SaveFile, playerPower); // playerPower
-        SaveFile >> Level::PlayerLevel; // PlayerLevel
-        SaveFile.ignore();
-        SaveFile >> Level::PlayerExp; // PlayerExp
-        SaveFile.ignore();
-        SaveFile >> Map::PlayerLoc.ID; // PlayerLoc.ID
-        SaveFile.ignore();
-        switch(Map::PlayerLoc.ID){
-            case 1: Map::PlayerLoc=Map::City; break;
-            case 2: Map::PlayerLoc=Map::Temple; break;
-            case 3: Map::PlayerLoc=Map::Tower; break;
-            case 4: Map::PlayerLoc=Map::Farm; break;
-            case 5: Map::PlayerLoc=Map::Castle; break;
-        }
-        SaveFile >> size; // inventory.size
-        SaveFile.ignore();
-        inventory.clear();
-        for (int i = 0; i < size; i++) {
-            getline(SaveFile, Item);        // inventory
-            inventory.push_back(Item);
-        }
-        SaveFile.close();
-        cout << "Game loaded successfully.\n";
-        return 0;
-    }
-    
-    bool DeleteSave(const int Filenum){
-        bool fail;
-        char yn;
-        cout << "Are you sure you want to delete this save?\n"
-             << "This operation cannot be undone\n"
-             << "(y/n): ";
-        cin >> yn;
-        if (yn == 'y' || yn == 'Y') {
-        } else { return 1;}
-        switch(Filenum){
-            case 1: fail=remove("Saves/Save1.txt"); break;
-            case 2: fail=remove("Saves/Save2.txt"); break;
-            case 3: fail=remove("Saves/Save3.txt"); break;
-        }
-        switch (fail){
-            case 0: cout << "File successfully deleted\n";
-            case 1: cout << "No file to delete found\n";
-        }
-        return fail;
-    }
-
-} // Ending namespace Save
-
-
-namespace Format{
-
-    void PageBreak(){
-        cout << "-------------------------------------------------------------\n"; 
-    }
-
-    void Pause(){
-        cout << "Press Enter to continue  ";
-        cin.ignore();cin.ignore();
-    }
-
-} // Ending namespace Format
 
