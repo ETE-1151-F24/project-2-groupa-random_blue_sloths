@@ -38,15 +38,15 @@ namespace Save{
                 cin >> opnum;
                 switch(opnum){
                     case 1:
-                    if(SaveGame(Filenum,P)==1){opnum=4;}
+                        if(SaveGame(Filenum,P)==1){opnum=4;}
                     else{return;}
                     break;
                     case 2:
-                    if(LoadGame(Filenum,P)==1){opnum=4;}
-                    else{return;}
+                        if(LoadGame(Filenum,P)==1){opnum=4;}
+                        else{return;}
                     break;
                     case 3:
-                        DeleteSave(Filenum);
+                           DeleteSave(Filenum);
                     break;
                     case 4: break;
                     default: cout << "Invalid Choice\n";
@@ -105,7 +105,7 @@ namespace Save{
     // P.Magic, P.Loc.ID, inventory.size, inventory
     bool SaveGame(const int Filenum, const Player& P){  
         string temp;
-        int tempN                  
+        int tempN;                  
         char timestamp[20];             
         ofstream SaveFile;
         switch(Filenum){
@@ -143,9 +143,8 @@ namespace Save{
     // Timestamp, P.Name, P.Level, P.Exp, P.Type
     // P.Magic, P.Loc.ID, inventory.size, inventory
     bool LoadGame(const int Filenum, Player& P){
-        string temp;
-        int size;
-        string Item;
+        string temp, Item;
+        int size, K;
         ifstream SaveFile;
         switch(Filenum){
             case 1:SaveFile.open("Saves/Save1.txt"); break;
@@ -171,8 +170,8 @@ namespace Save{
             inventoryItems.push_back(temp);
             getline(SaveFile, temp);
             inventoryDescriptions.push_back(temp);
-            SaveFile >> size; SaveFile.ignore();
-            inventoryTraits.push_back(size);
+            SaveFile >> K; SaveFile.ignore();
+            inventoryTraits.push_back(K);
         }
         SaveFile.close();
         cout << "Game loaded successfully.\n";
