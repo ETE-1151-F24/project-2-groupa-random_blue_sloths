@@ -1,0 +1,32 @@
+2024-11-13 20:39:17
+MrPowers
+1
+10
+1
+10
+2
+8
+Healing Potion
+restores 20 magic points.
+20
+Sword
+No magic bonus.
+0
+Armor
+Reduces incoming magic damage by 3 points.
+-3
+Spell Book
+Increases your magic by 10 points.
+10
+Attack Potion
+A potion that makes you hit real hard
+5
+Fire Scroll
+A scroll used to cast a basic fire spell
+5
+Attack Potion
+A potion that makes you hit real hard
+5
+Fire Scroll
+A scroll used to cast a basic fire spell
+5
