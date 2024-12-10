@@ -15,6 +15,7 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "group": "build",
+               
             "presentation": {
                 // Reveal the output only if unrecognized errors occur.
                 "reveal": "silent"
